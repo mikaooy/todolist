@@ -1,109 +1,98 @@
 import React, { Component } from "react"
 import "./App.css"
-import Todos from "./components/Todos"
-import Header from "./components/layout/Header"
-import AddTodo from "./components/AddTodo"
-import { BrowserRouter as Router, Route } from "react-router-dom"
-import About from "./components/pages/About"
-import Contact from "./components/pages/Contact"
-import SearchBox from "./components/SearchBox"
+import SeznamUkolu from "./components/SeznamUkolu"
+import Header from "./components/Header"
+import VyhledavaciPole from "./components/VyhledavaciPole"
 import "bootstrap/dist/css/bootstrap.css"
+import PridejTodo from "./components/PridejTodo"
+
+const stateVersion = 1
 
 class App extends Component {
   constructor(props) {
     super(props)
     const storedState = localStorage.getItem("state")
-    this.state = storedState
-      ? JSON.parse(storedState)
-      : {
-          todos: [],
-          searchfield: "",
-        }
+    const parsedState = JSON.parse(storedState)
+
+    this.state =
+      storedState && parsedState.stateVersion === stateVersion
+        ? parsedState
+        : {
+            ukoly: [],
+            searchfield: "",
+          }
   }
 
   componentDidUpdate() {
-    localStorage.setItem("state", JSON.stringify(this.state))
+    localStorage.setItem(
+      "state",
+      JSON.stringify({ ...this.state, stateVersion })
+    )
   }
 
-  // toggle complete
-  markComplete = (id) => {
+  oznacZaHotove = (id) => {
     this.setState({
-      todos: this.state.todos.map((todo) => {
-        if (todo.id === id) {
-          todo.completed = !todo.completed
+      ukoly: this.state.ukoly.map((ukol) => {
+        if (ukol.id === id) {
+          ukol.completed = !ukol.completed
         }
-        return todo
+        return ukol
       }),
     })
   }
 
-  //Delete Todo
-  delTodo = (id) => {
+  smazatUkol = (id) => {
     this.setState({
-      todos: this.state.todos.filter((todo) => todo.id !== id),
+      ukoly: this.state.ukoly.filter((ukol) => ukol.id !== id),
     })
   }
 
-  // Add Todo
-  addTodo = (title) => {
-    const newTodo = {
+  pridatUkol = (title) => {
+    const novyUkol = {
       id: 1 + Math.random(),
       title: title,
       completed: false,
     }
 
-    this.setState({ todos: [...this.state.todos, newTodo] })
+    this.setState({ ukoly: [...this.state.ukoly, novyUkol] })
   }
 
-  onSearchChange = (e) => {
+  naZmenuVyhledavani = (e) => {
     this.setState({ searchfield: e.target.value })
   }
 
-  clearList = () =>
+  smazatVse = () =>
     this.setState({
-      todos: [],
+      ukoly: [],
     })
 
   render() {
-    const { todos, searchfield } = this.state
-    const filteredTodos = todos.filter((todo) =>
-      todo.title.toLowerCase().includes(searchfield.toLowerCase())
+    const { ukoly, searchfield } = this.state
+    const filtrovaneUkoly = ukoly.filter((ukol) =>
+      ukol.title.toLowerCase().includes(searchfield.toLowerCase())
     )
 
     return (
-      <Router>
-        <div className="App">
-          <div className="container-fluid p-3">
-            <Header />
-            <Route
-              exact
-              path="/"
-              render={(props) => (
-                <React.Fragment>
-                  <div class="bg-dark d-flex justify-content-between align-items-center">
-                    <SearchBox searchChange={this.onSearchChange}></SearchBox>
-                    <AddTodo addTodo={this.addTodo} />
-                    <button
-                      class="btn btn-warning m-3"
-                      onClick={this.clearList}
-                    >
-                      clear all
-                    </button>
-                  </div>
-                  <Todos
-                    todos={filteredTodos}
-                    markComplete={this.markComplete}
-                    delTodo={this.delTodo}
-                    clearList={this.clearList}
-                  />
-                </React.Fragment>
-              )}
-            ></Route>
-            <Route path="/about" component={About} />
-            <Route path="/contact" component={Contact} />
+      <div className="App">
+        <div className="container-fluid p-3">
+          <Header />
+          <div className="bg-dark d-flex justify-content-between align-items-center">
+            <VyhledavaciPole
+              vyhledavaciZmena={this.naZmenuVyhledavani}
+            ></VyhledavaciPole>
+            <PridejTodo pridatUkol={this.pridatUkol} />
+            <button className="btn btn-warning m-3" onClick={this.smazatVse}>
+              smaž vše
+            </button>
           </div>
+          <SeznamUkolu
+            ukoly={filtrovaneUkoly}
+            oznacZaHotove={this.oznacZaHotove}
+            smazatUkol={this.smazatUkol}
+            smazatVse={this.smazatVse}
+          />
         </div>
-      </Router>
+      </div>
     )
   }
 }
