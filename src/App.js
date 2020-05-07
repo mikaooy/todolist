@@ -89,7 +89,6 @@ class App extends Component {
             ukoly={filtrovaneUkoly}
             oznacZaHotove={this.oznacZaHotove}
             smazatUkol={this.smazatUkol}
-            smazatVse={this.smazatVse}
           />
         </div>
       </div>

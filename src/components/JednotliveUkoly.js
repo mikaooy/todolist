@@ -21,7 +21,7 @@ const JednotliveUkoly = (props) => {
                 className="delete btn btn-outline-success"
                 onClick={() => props.oznacZaHotove(id)}
               >
-                {props.ukol.completed ? "Nehotovo" : "Hotovo"}
+                {props.ukol.completed ? "Nedokončeno" : "Dokončeno"}
               </button>
               <button
                 className="delete btn btn-danger"
