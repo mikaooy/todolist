@@ -4,7 +4,7 @@ import SeznamUkolu from "./components/SeznamUkolu"
 import Header from "./components/Header"
 import VyhledavaciPole from "./components/VyhledavaciPole"
 import "bootstrap/dist/css/bootstrap.css"
-import PridejTodo from "./components/PridejTodo"
+import PridejUkol from "./components/PridejUkol"
 
 const stateVersion = 1
 
@@ -80,7 +80,7 @@ class App extends Component {
             <VyhledavaciPole
               vyhledavaciZmena={this.naZmenuVyhledavani}
             ></VyhledavaciPole>
-            <PridejTodo pridatUkol={this.pridatUkol} />
+            <PridejUkol pridatUkol={this.pridatUkol} />
             <button className="btn btn-warning m-3" onClick={this.smazatVse}>
               smaž vše
             </button>

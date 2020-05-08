@@ -1,6 +1,6 @@
 import React, { Component } from "react"
 
-class PridejTodo extends Component {
+class PridejUkol extends Component {
   state = {
     title: "",
   }
@@ -30,4 +30,4 @@ class PridejTodo extends Component {
   }
 }
 
-export default PridejTodo
+export default PridejUkol
